@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Unbounded", "Impact", sans-serif;
+  --font-hud: "Chakra Petch", ui-monospace, monospace;
+
+  --color-void: #07050f;
+  --color-abyss: #0d0a1c;
+  --color-slab: #171331;
+  --color-cyanx: #24e3ff;
+  --color-magentax: #ff2f9e;
+  --color-amberx: #ffb020;
+  --color-limex: #9dff3c;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #07050f;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-hud);
+  color: #e8e6ff;
+  text-rendering: optimizeLegibility;
+}
+
+canvas {
+  display: block;
+}
+
+/* ---------- utility ---------- */
+.clip-tag {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+.clip-tag-l {
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+}
+.clip-blade {
+  clip-path: polygon(0 0, 100% 0, 100% 68%, calc(100% - 18px) 100%, 0 100%);
+}
+.clip-slant {
+  clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.stroke-text {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.85);
+  color: transparent;
+}
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.045) 0px,
+    rgba(255, 255, 255, 0.045) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+.noise-layer {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+/* ---------- animations ---------- */
+@keyframes pb-pop {
+  0% {
+    transform: scale(1.55);
+    filter: brightness(2.2);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+.anim-pop {
+  animation: pb-pop 0.28s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+@keyframes pb-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-28px) skewX(-8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) skewX(-8deg);
+  }
+}
+.anim-slide {
+  animation: pb-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pb-banner {
+  0% {
+    opacity: 0;
+    transform: scale(1.35) translateY(10px);
+    letter-spacing: 0.6em;
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    letter-spacing: 0.14em;
+  }
+  76% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.94);
+    letter-spacing: 0.3em;
+  }
+}
+.anim-banner {
+  animation: pb-banner 2.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pb-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.72;
+  }
+  47% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.55;
+  }
+  64% {
+    opacity: 1;
+  }
+}
+.anim-flicker {
+  animation: pb-flicker 5.5s infinite steps(1, end);
+}
+
+@keyframes pb-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.anim-drift {
+  animation: pb-drift 7s ease-in-out infinite;
+}
+
+@keyframes pb-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+.anim-sweep {
+  animation: pb-sweep 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pb-ready {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 26px 2px rgba(255, 255, 255, 0.35);
+  }
+}
+.anim-ready {
+  animation: pb-ready 1.1s ease-in-out infinite;
+}
+
+@keyframes pb-crit {
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+.anim-crit {
+  animation: pb-crit 1.05s ease-in-out infinite;
+}
+
+@keyframes pb-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.anim-rise {
+  animation: pb-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+}
